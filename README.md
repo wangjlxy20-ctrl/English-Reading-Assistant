@@ -35,3 +35,8 @@ POST /records
 - Vue3 frontend
 - Vocabulary management
 - AI reading assistant
+
+## Author 
+WangJiaLe<br>
+Computer Science Student<br>
+Java Backend Development Leaner
