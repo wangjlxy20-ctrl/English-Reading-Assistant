@@ -1,0 +1,10 @@
+POST http://localhost:8080/records
+Content-Type: application/json
+
+
+{
+  "userId":1,
+  "bookId":1,
+  "chapterId":1,
+  "progress":50
+}
