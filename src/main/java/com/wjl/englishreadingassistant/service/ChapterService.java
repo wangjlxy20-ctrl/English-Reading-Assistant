@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface ChapterService {
     List<Chapter> findByBookId(Long bookId);
+    Chapter findById(Long id);
 }

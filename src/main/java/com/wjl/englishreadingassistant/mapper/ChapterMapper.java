@@ -13,4 +13,11 @@ public interface ChapterMapper {
             "select * from chapter where book_id = #{bookId}"
     )
     List<Chapter> findByBookId(Long bookId);
+
+    @Select("""
+    select *
+    from chapter
+    where id=#{id}
+    """)
+    Chapter findById(Long id);
 }

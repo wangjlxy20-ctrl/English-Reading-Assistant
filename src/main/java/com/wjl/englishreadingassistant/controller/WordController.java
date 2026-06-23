@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/words")
+@CrossOrigin
 public class WordController {
 
     private final WordService wordService;

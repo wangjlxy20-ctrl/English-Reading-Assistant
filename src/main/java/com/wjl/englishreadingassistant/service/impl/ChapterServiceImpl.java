@@ -21,4 +21,9 @@ public class ChapterServiceImpl implements ChapterService {
     public List<Chapter> findByBookId(Long bookId) {
         return chapterMapper.findByBookId(bookId);
     }
+
+    @Override
+    public Chapter findById(Long id) {
+        return chapterMapper.findById(id);
+    }
 }

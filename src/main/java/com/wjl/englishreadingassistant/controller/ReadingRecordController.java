@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/records")
+@CrossOrigin
 public class ReadingRecordController {
     private final ReadingRecordService service;
 

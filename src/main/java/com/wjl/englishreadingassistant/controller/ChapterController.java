@@ -2,15 +2,13 @@ package com.wjl.englishreadingassistant.controller;
 
 import com.wjl.englishreadingassistant.entity.Chapter;
 import com.wjl.englishreadingassistant.service.ChapterService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/chapters")
+@CrossOrigin
 public class ChapterController {
     private final ChapterService chapterService;
 
@@ -23,5 +21,13 @@ public class ChapterController {
             @PathVariable Long bookId
     ){
         return chapterService.findByBookId(bookId);
+    }
+
+    @GetMapping("/{id}")
+    public Chapter detail(
+            @PathVariable Long id){
+
+        return chapterService.findById(id);
+
     }
 }
