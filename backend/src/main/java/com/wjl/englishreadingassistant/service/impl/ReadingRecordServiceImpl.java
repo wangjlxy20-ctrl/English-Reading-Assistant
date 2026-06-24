@@ -27,10 +27,9 @@ public class ReadingRecordServiceImpl implements ReadingRecordService {
 
 
         ReadingRecord oldRecord =
-                mapper.findRecord(
+                mapper.findByUserAndBook(
                         record.getUserId(),
-                        record.getBookId(),
-                        record.getChapterId()
+                        record.getBookId()
                 );
 
 
@@ -50,4 +49,7 @@ public class ReadingRecordServiceImpl implements ReadingRecordService {
         }
 
     }
+
+
+
 }

@@ -1,10 +1,7 @@
 package com.wjl.englishreadingassistant.mapper;
 
 import com.wjl.englishreadingassistant.entity.ReadingRecord;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -19,12 +16,12 @@ public interface ReadingRecordMapper {
 
     //Check whether reading records exist for a certain chapter
     @Select("""
-select *
-from reading_record
-where user_id=#{userId}
-and book_id=#{bookId}
-and chapter_id=#{chapterId}
-""")
+        select *
+        from reading_record
+        where user_id=#{userId}
+        and book_id=#{bookId}
+        and chapter_id=#{chapterId}
+        """)
     ReadingRecord findRecord(
             Long userId,
             Long bookId,
@@ -43,12 +40,22 @@ and chapter_id=#{chapterId}
 
 
     //Update
-    @Update(
-            """
-            update reading_record
-            set progress = #{progress},
-            last_read_time=now()
-            where id = #{id}
-            """
-    )void update(ReadingRecord record);
+    @Update("""
+        update reading_record
+        set chapter_id = #{chapterId},
+            progress = #{progress},
+            last_read_time = now()
+        where id = #{id}
+    """)
+    void update(ReadingRecord record);
+
+    @Select("""
+    select * from reading_record
+    where user_id = #{userId} and book_id = #{bookId}
+    """)
+    ReadingRecord findByUserAndBook(
+            @Param("userId") Long userId,
+            @Param("bookId") Long bookId
+    );
+
 }

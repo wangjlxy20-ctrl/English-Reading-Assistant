@@ -1,6 +1,7 @@
 package com.wjl.englishreadingassistant.controller;
 
 import com.wjl.englishreadingassistant.entity.Word;
+import com.wjl.englishreadingassistant.mapper.WordMapper;
 import com.wjl.englishreadingassistant.service.WordService;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,16 +14,26 @@ import java.util.List;
 public class WordController {
 
     private final WordService wordService;
+    private final WordMapper wordMapper;
 
-    public WordController(WordService wordService) {
+    public WordController(WordService wordService, WordMapper wordMapper) {
         this.wordService = wordService;
+        this.wordMapper = wordMapper;
     }
 
     @PostMapping
     public String save(
             @RequestBody Word word){
+        Word existWord =
+                wordMapper.findByUserIdAndWord(
+                        word.getUserId(),
+                        word.getWord()
+                );
+        if(existWord != null){
+            return "already exists";
+        }
         wordService.save(word);
-        return "success";
+        return "saved";
     }
 
     @GetMapping("/{userId}")

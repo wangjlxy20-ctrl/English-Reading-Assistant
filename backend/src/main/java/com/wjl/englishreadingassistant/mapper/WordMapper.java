@@ -1,9 +1,6 @@
 package com.wjl.englishreadingassistant.mapper;
 import com.wjl.englishreadingassistant.entity.Word;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -29,4 +26,14 @@ public interface WordMapper {
     delete from word 
     where id=#{id}
     """)void deleteById(Long id);
+
+    @Select(
+        """
+        select * from word
+        where user_id = #{userId} and word = #{word}
+        """
+    )Word findByUserIdAndWord(
+            @Param("userId") Long userId,
+            @Param("word") String word
+    );
 }

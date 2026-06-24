@@ -13,8 +13,29 @@
       <h2>My BookShelf</h2>
       <div v-if="!selectedBook">
         <ul>
-          <li v-for="book in books" :key="book.id" @click="loadChapters(book)">
-            {{ book.title }}
+          <li 
+          v-for="book in books" 
+          :key="book.id" 
+          @click="loadChapters(book)"
+          >
+            <div>
+              <strong>{{ book.title }}</strong>
+            </div>
+
+            <div
+              v-if="getLastReadChapter(book.id)"
+            >
+              Last Read Chapter:
+              {{ getLastReadChapter(book.id) }}
+            </div>
+
+            <button
+              v-if="getLastReadChapter(book.id)"
+              @click.stop="continueReading(book)"
+            >
+                Continue Reading
+            </button>
+            
           </li>
         </ul>
       </div>
@@ -56,8 +77,17 @@
     <div v-else-if="currentPage === 'vocabulary'">
       <h2>My Vocabulary</h2>
       <ul>
-        <li v-for="item in vocabulary" :key="item.id">
+        <li 
+          v-for="item in vocabulary" 
+          :key="item.id">
           {{ item.word }}
+
+          <button
+            @click="deleteWord(item.id)"
+          >
+            Delete
+          </button>
+
         </li>
       </ul>
     </div>
@@ -82,10 +112,21 @@ const currentPage = ref("bookshelf");
 
 const vocabulary = ref([]);
 
+const readingRecords = ref([]);
+
 onMounted(async () => {
   const response = await axios.get("http://localhost:8080/books");
 
   books.value = response.data;
+
+  const recordResponse = 
+    await axios.get(
+      "http://localhost:8080/records/1"
+    )
+
+    readingRecords.value = 
+      recordResponse.data;
+
 });
 
 async function loadChapters(book) {
@@ -105,17 +146,34 @@ async function loadChapter(chapter) {
   selectedChapter.value = response.data;
 
   words.value = response.data.content.split(" ");
+
+  await axios.post(
+    "http://localhost:8080/records",
+    {
+      userId:1,
+      bookId:selectedBook.value.id,
+      chapterId:chapter.id,
+      progress:100
+    }
+  )
+
+
 }
 
 async function saveWord(word) {
-  await axios.post("http://localhost:8080/words", {
+  const response = await axios.post("http://localhost:8080/words", {
     userId: 1,
     chapterId: selectedChapter.value.id,
     word: word,
     meaning: "To Be supplemented",
     example: "",
   });
-  alert(word + " saved!");
+  if(response.data === "saved"){
+    alert(word + " Favorite saved!")
+  }else if(response.data === "already exists"){
+    alert(word + " Have Collected!")
+  }
+  
 }
 
 async function loadVocabulary() {
@@ -126,13 +184,53 @@ async function loadVocabulary() {
   vocabulary.value = response.data;
 }
 
-function goBookshelf() {
-  currentPage.value = "bookshelf";
+async function deleteWord(id){
+  await axios.delete(
+    `http://localhost:8080/words/${id}`
+  )
 
-  selectedBook.value = null;
-
-  selectedChapter.value = null;
+  await loadVocabulary()
 }
+
+function getLastReadChapter(bookId){
+
+  const record = 
+    readingRecords.value.find(
+      r => r.bookId === bookId
+    )
+
+    if(record){
+      return record.chapterId;
+    }
+
+    return null;
+}
+
+async function continueReading(book){
+  const record = 
+    readingRecords.value.find(
+      r => r.bookId === book.id
+    )
+
+  if(!record){
+    alert("No reading record found")
+    return
+  }
+
+  const response = 
+    await axios.get(
+      `http://localhost:8080/chapters/${record.chapterId}`
+    )
+
+  selectedBook.value = book
+
+  selectedChapter.value = 
+    response.data
+
+  words.value = 
+    response.data.content.split(" ")
+}
+
 </script>
 
 <style scoped>

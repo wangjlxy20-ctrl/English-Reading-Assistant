@@ -20,7 +20,16 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public void save(Word word) {
-        wordMapper.insert(word);
+        Word exist =
+                wordMapper.findByUserIdAndWord(
+                        word.getUserId(),
+                        word.getWord()
+                );
+
+        if(exist == null){
+            wordMapper.insert(word);
+        }
+
     }
 
     @Override

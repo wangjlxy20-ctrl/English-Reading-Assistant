@@ -1,10 +1,17 @@
-target/
+# IntelliJ IDEA
 .idea/
 *.iml
 
-.classpath
-.project
-.settings/
+# Maven
+backend/target/
 
-logs/
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Logs
 *.log
+
+# OS
+.DS_Store
+Thumbs.db

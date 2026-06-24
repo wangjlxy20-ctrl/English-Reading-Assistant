@@ -1,10 +1,2 @@
 POST http://localhost:8080/words
 Content-Type: application/json
-
-{
-"userId":1,
-"chapterId":1,
-"word":"fished",
-"meaning":"捕鱼",
-"example":"He fished alone."
-}
