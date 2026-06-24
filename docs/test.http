@@ -1,3 +1,8 @@
-GET http://localhost:8080/records/1
+PUT http://localhost:8080/words/1
 Content-Type: application/json
+
+{
+  "meaning":"test meaning",
+  "example":"test example"
+}
 

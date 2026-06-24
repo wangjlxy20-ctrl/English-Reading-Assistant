@@ -41,4 +41,9 @@ public class WordServiceImpl implements WordService {
     public void delete(Long id) {
         wordMapper.deleteById(id);
     }
+
+    @Override
+    public void updateWordInfo(Word word) {
+        wordMapper.updateWordInfo(word);
+    }
 }

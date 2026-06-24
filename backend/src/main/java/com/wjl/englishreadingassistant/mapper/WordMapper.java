@@ -36,4 +36,15 @@ public interface WordMapper {
             @Param("userId") Long userId,
             @Param("word") String word
     );
+
+    @Update("""
+    update word
+    set meaning = #{meaning},
+        example = #{example}
+    where id = #{id}
+    """)
+    void updateWordInfo(Word word);
+
+
+
 }

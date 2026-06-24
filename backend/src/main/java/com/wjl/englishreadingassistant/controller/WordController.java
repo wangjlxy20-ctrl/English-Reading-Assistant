@@ -50,5 +50,17 @@ public class WordController {
         wordService.delete(id);
         return "success";
     }
+
+    @PutMapping("/{id}")
+    public String updateWord(
+            @PathVariable Long id,
+            @RequestBody Word word){
+        word.setId(id);
+        wordService.updateWordInfo(word);
+
+        return "success";
+    }
+
+
 }
 
