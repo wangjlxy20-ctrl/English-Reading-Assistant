@@ -4,7 +4,7 @@
 
     <div class="nav">
       <button @click="currentPage = 'bookshelf'">Bookshelf</button>
-
+      <input type="file" @change="uploadBook">
       <button @click="loadVocabulary()">Vocabulary</button>
     </div>
 
@@ -464,6 +464,21 @@ function closeAiPanel(){
 
   selectedAiWord.value = "";
 
+}
+
+async function uploadBook(event) {
+
+  const file = event.target.file[0]
+
+  const formData = new FormData()
+
+  formData.append("file",file)
+
+  await axios.post(
+    "/api/books/upload",
+    formData
+  )
+  
 }
 
 </script>

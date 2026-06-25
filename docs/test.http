@@ -1,7 +1,10 @@
-### POST /ai/word 单词查询接口
-POST http://localhost:8080/ai/word
-Content-Type: application/json
+#### 上传txt文件
+POST http://localhost:8080/books/upload
+Content-Type: multipart/form-data; boundary=WebAppBoundary
 
-{
-  "word": "rainbow"
-}
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="animal_farm.txt"
+Content-Type: text/plain
+
+< ./animal_farm.txt
+--WebAppBoundary--

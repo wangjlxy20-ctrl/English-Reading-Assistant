@@ -1,6 +1,7 @@
 package com.wjl.englishreadingassistant.mapper;
 
 import com.wjl.englishreadingassistant.entity.Chapter;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -20,4 +21,18 @@ public interface ChapterMapper {
     where id=#{id}
     """)
     Chapter findById(Long id);
+
+    @Insert("""
+        insert into chapter
+        (book_id,chapter_no,title,content)
+        values 
+        (
+         #{bookId},
+         #{chapterNo},
+         #{title},
+         #{content}
+         
+         )
+    """)
+    void insert(Chapter chapter);
 }
