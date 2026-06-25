@@ -1,8 +1,7 @@
-PUT http://localhost:8080/words/1
+### POST /ai/word 单词查询接口
+POST http://localhost:8080/ai/word
 Content-Type: application/json
 
 {
-  "meaning":"test meaning",
-  "example":"test example"
+  "word": "rainbow"
 }
-

@@ -30,5 +30,4 @@ public class ReadingRecordController {
         return "success";
     }
 
-
 }

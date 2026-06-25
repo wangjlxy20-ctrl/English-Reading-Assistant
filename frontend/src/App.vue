@@ -49,12 +49,68 @@
         <button @click="selectedChapter = null">Return to Chapters</button>
         <h2>{{ selectedChapter.title }}</h2>
         <p class="content">
-          <span v-for="word in words" :key="word" @click="saveWord(word)" class="word">
+          <span 
+          v-for="word in words" 
+          :key="word" 
+          @click="openWordMenu(word)" 
+          class="word">
             {{ word }}
           </span>
         </p>
+
+        <div
+        v-if="showMenu"
+        class="word-menu"
+        >
+
+          <h3>
+            {{ currentWord }}
+          </h3>
+
+          <button @click="saveCurrentWord">
+            ⭐ Collect
+          </button>
+
+          <button @click="explainCurrentWord">
+            🤖 AI Explain
+          </button>
+
+          <button @click="showMenu = false">
+            ✖ Close
+          </button>
+
+        </div>
+        
+        <div
+        v-if="showAiPanel"
+        class="ai-panel"
+        >
+
+          <button
+            class="close-btn"
+            @click="closeAiPanel"
+          >
+            ✖ Close
+          </button>
+
+
+          <h3>
+            AI Explanation:
+            {{ selectedAiWord }}
+          </h3>
+
+          <pre>{{ aiExplanation }}</pre>
+
+        </div>
+
+
+
       </div>
+
+
     </div>
+
+
     <!--Vocabulary Module-->
     <div v-else-if="currentPage === 'vocabulary'">
       <h2>My Vocabulary</h2>
@@ -121,7 +177,17 @@ const dictionaryMeaning = ref("");
 
 const dictionaryExample = ref("");
 
+const aiExplanation = ref("");
+
+const selectedAiWord = ref("");
+
 const readingRecords = ref([]);
+
+const currentWord = ref("");
+
+const showMenu = ref(false);
+
+const showAiPanel = ref(false);
 
 onMounted(async () => {
   const response = await axios.get("http://localhost:8080/books");
@@ -343,6 +409,63 @@ async function showWordDetail(item) {
 
 }
 
+async function explainWord(word) {
+  
+  try{
+    selectedAiWord.value = word
+
+    const response = 
+      await axios.post(
+        "http://localhost:8080/ai/word",
+          {
+            word:word
+          }
+      )
+
+      aiExplanation.value = 
+          response.data
+  } catch(error){
+
+    console.log(error)
+
+    aiExplanation.value = 
+      "AI analysis failed"
+  }
+}
+
+function openWordMenu(word){
+  currentWord.value = word;
+  showMenu.value = true;
+}
+
+async function saveCurrentWord(){
+
+  await saveWord(
+    currentWord.value
+  );
+
+}
+
+async function explainCurrentWord(){
+
+  await explainWord(
+    currentWord.value
+  );
+
+  showAiPanel.value = true;
+
+}
+
+function closeAiPanel(){
+
+  showAiPanel.value = false;
+
+  aiExplanation.value = "";
+
+  selectedAiWord.value = "";
+
+}
+
 </script>
 
 <style scoped>
@@ -369,5 +492,35 @@ ul {
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
+}
+
+.ai-panel {
+
+  margin-top: 20px;
+
+  padding: 15px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 8px;
+
+  max-width: 800px;
+
+}
+
+.ai-btn {
+
+  margin-left: 4px;
+
+  cursor: pointer;
+
+}
+
+.save-btn {
+
+  margin-left: 4px;
+
+  cursor: pointer;
+
 }
 </style>

@@ -1,6 +1,6 @@
 # English Reading Assistant
 
-English Original Reading Assistant Based on ：Spring Boot + MyBatis + MySQL + Vue3
+English Original Reading Assistant Based on ：Spring Boot + MyBatis + MySQL + Vue3 + Qwen-turbo
 
 ## Tech Stack
 
@@ -16,6 +16,10 @@ Frontend:
 - Vue3
 - Axios
 
+AI:
+
+- Qwen-turbo
+
 ## Features
 
 - Book management
@@ -26,6 +30,7 @@ Frontend:
 - Duplicate Prevention
 - Continue Reading
 - Vocabulary Cache
+- AI reading assistant
 
 ## Current API
 
@@ -39,9 +44,10 @@ POST /records
 
 FreeDictionaryAPI
 
+Qwen-turbo API
+
 ## Future
 
-- AI reading assistant
 - Optimize the splitting algorithm for English text
 - Use a filter to screen out common article,conjunctions and other words that do not affect reading comprehension.
 - Import PDF/EPUB Files
@@ -52,6 +58,8 @@ FreeDictionaryAPI
 ![alt text](./docs/ReadingPageShow.png)
 
 ![alt text](./docs/Load_Catche.png)
+
+![alt text](./docs/AI_Chat_Show.png)
 
 ## Author
 
