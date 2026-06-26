@@ -18,7 +18,7 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public List<Book> list(){
         return bookService.findAll();
     }
@@ -27,7 +27,23 @@ public class BookController {
     public String upload(
             @RequestParam("file")
             MultipartFile file){
-        bookService.importTxt(file);
+
+        String filename =
+                file.getOriginalFilename();
+
+        if(filename == null || !filename.endsWith(".txt")){
+            throw new RuntimeException(
+                    "Only TXT files are supported at present"
+            );
+        }
+
+        String title =
+                filename.substring(
+                        0,
+                        filename.lastIndexOf(".")
+                );
+
+        bookService.importTxt(file,title);
 
         return "success";
     }

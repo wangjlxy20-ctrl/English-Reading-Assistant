@@ -4,13 +4,14 @@
 
     <div class="nav">
       <button @click="currentPage = 'bookshelf'">Bookshelf</button>
-      <input type="file" @change="uploadBook">
+      <input type="file" @change="uploadBook" />
       <button @click="loadVocabulary()">Vocabulary</button>
     </div>
 
     <!--BookShelf Page-->
     <div class="books-area" v-if="currentPage === 'bookshelf'">
       <h2>My BookShelf</h2>
+
       <div v-if="!selectedBook">
         <ul>
           <li v-for="book in books" :key="book.id" @click="loadChapters(book)">
@@ -156,6 +157,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import request from "./api/request";
 
 const books = ref([]);
 
@@ -190,40 +192,34 @@ const showMenu = ref(false);
 const showAiPanel = ref(false);
 
 onMounted(async () => {
-  const response = await axios.get("http://localhost:8080/books");
-
-  books.value = response.data;
-
-  const recordResponse =
-    await axios.get(
-      "http://localhost:8080/records/1"
-    )
-
-  readingRecords.value =
-    recordResponse.data;
+  await Promise.all([
+    loadBooks(),
+    loadRecords()
+  ])
 
 });
 
+
 async function loadChapters(book) {
   selectedBook.value = book;
-  const response = await axios.get(
-    `http://localhost:8080/chapters/book/${book.id}`,
+  const response = await request.get(
+    `/chapters/book/${book.id}`,
   );
 
   chapters.value = response.data;
 }
 
 async function loadChapter(chapter) {
-  const response = await axios.get(
-    `http://localhost:8080/chapters/${chapter.id}`,
+  const response = await request.get(
+    `/chapters/${chapter.id}`,
   );
 
   selectedChapter.value = response.data;
 
-  words.value = response.data.content.split(" ");
+  words.value = tokenize(response.data.content);
 
-  await axios.post(
-    "http://localhost:8080/records",
+  await request.post(
+    "/records",
     {
       userId: 1,
       bookId: selectedBook.value.id,
@@ -236,7 +232,7 @@ async function loadChapter(chapter) {
 }
 
 async function saveWord(word) {
-  const response = await axios.post("http://localhost:8080/words", {
+  const response = await request.post("/words", {
     userId: 1,
     chapterId: selectedChapter.value.id,
     word: word,
@@ -254,14 +250,14 @@ async function saveWord(word) {
 async function loadVocabulary() {
   currentPage.value = "vocabulary";
 
-  const response = await axios.get("http://localhost:8080/words/1");
+  const response = await request.get("/words/1");
 
   vocabulary.value = response.data;
 }
 
 async function deleteWord(id) {
-  await axios.delete(
-    `http://localhost:8080/words/${id}`
+  await request.delete(
+    `/words/${id}`
   )
 
   await loadVocabulary()
@@ -293,8 +289,8 @@ async function continueReading(book) {
   }
 
   const response =
-    await axios.get(
-      `http://localhost:8080/chapters/${record.chapterId}`
+    await request.get(
+      `/chapters/${record.chapterId}`
     )
 
   selectedBook.value = book
@@ -303,9 +299,9 @@ async function continueReading(book) {
     response.data
 
   words.value = 
-  response.data.content
-  .match(/[a-zA-Z]+(?:['’-][a-zA-Z]+)*/g) || []
+  tokenize(response.data.content);
 }
+
 
 async function lookupWord(word, item) {
 
@@ -351,8 +347,8 @@ async function lookupWord(word, item) {
 
 
 
-    await axios.put(
-      `http://localhost:8080/words/${item.id}`,
+    await request.put(
+      `/words/${item.id}`,
       {
         meaning: dictionaryMeaning.value,
         example: dictionaryExample.value
@@ -383,6 +379,7 @@ async function lookupWord(word, item) {
 
 }
 
+
 async function showWordDetail(item) {
 
   selectedWord.value = item
@@ -409,14 +406,15 @@ async function showWordDetail(item) {
 
 }
 
+
 async function explainWord(word) {
   
   try{
     selectedAiWord.value = word
 
     const response = 
-      await axios.post(
-        "http://localhost:8080/ai/word",
+      await request.post(
+        "/ai/word",
           {
             word:word
           }
@@ -433,10 +431,12 @@ async function explainWord(word) {
   }
 }
 
+
 function openWordMenu(word){
   currentWord.value = word;
   showMenu.value = true;
 }
+
 
 async function saveCurrentWord(){
 
@@ -445,6 +445,7 @@ async function saveCurrentWord(){
   );
 
 }
+
 
 async function explainCurrentWord(){
 
@@ -456,6 +457,7 @@ async function explainCurrentWord(){
 
 }
 
+
 function closeAiPanel(){
 
   showAiPanel.value = false;
@@ -466,21 +468,64 @@ function closeAiPanel(){
 
 }
 
+
 async function uploadBook(event) {
 
-  const file = event.target.file[0]
+  const file = event.target.files[0]
+
+  if(!file){
+    console.log("No file selected");
+    return;
+  }
+
 
   const formData = new FormData()
 
   formData.append("file",file)
 
-  await axios.post(
-    "/api/books/upload",
-    formData
+  try{
+    const res = await request.post(
+    "/books/upload",
+    formData,
+    {
+      headers:{
+        "Content-Type":"multipart/form-data"
+      }
+    }
   )
+
+    console.log("upload successful!",res.data)
+
+
+  await loadBooks();
+
+
+  }catch(err){
+    console.error("upload failed",err);
+  }
+
+}
+
+
+async function loadBooks() {
+  const res = await request.get("/books/list")
+  books.value = res.data;
+}
+
+async function loadRecords() {
+  const res = await request.get("/records/1")
+  readingRecords.value = res.data;
   
 }
 
+//unified chunking function
+function tokenize(text) {
+  return text
+    .replace(/[\n\r]/g," ")
+    .replace(/[^a-zA-Z0-9'’-]+/g," ")
+    .trim()
+    .split(/\s+/)
+}
 </script>
 
 <style scoped>

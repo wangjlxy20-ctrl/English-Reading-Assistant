@@ -5,7 +5,9 @@ import com.wjl.englishreadingassistant.entity.Chapter;
 import com.wjl.englishreadingassistant.mapper.BookMapper;
 import com.wjl.englishreadingassistant.mapper.ChapterMapper;
 import com.wjl.englishreadingassistant.service.BookService;
+import com.wjl.englishreadingassistant.service.ChapterService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -16,9 +18,11 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
     private final ChapterMapper chapterMapper;
-    public BookServiceImpl(BookMapper bookMapper, ChapterMapper chapterMapper) {
+    private final ChapterService chapterService;
+    public BookServiceImpl(BookMapper bookMapper, ChapterMapper chapterMapper, ChapterService chapterService) {
         this.bookMapper = bookMapper;
         this.chapterMapper = chapterMapper;
+        this.chapterService = chapterService;
     }
 
 
@@ -27,8 +31,10 @@ public class BookServiceImpl implements BookService {
         return bookMapper.findAll();
     }
 
+
     @Override
-    public void importTxt(MultipartFile file) {
+    @Transactional
+    public void importTxt(MultipartFile file,String title) {
 
         try {
 
@@ -37,19 +43,27 @@ public class BookServiceImpl implements BookService {
                             file.getBytes(),
                             StandardCharsets.UTF_8
                     );
-            String fileName =
-                    file.getOriginalFilename();
+
+
             Book book = new Book();
-            book.setTitle(fileName);
-            book.setTotalChapters(1);
+            book.setTitle(title);
+            book.setTitle(title);
+            book.setTotalChapters(0);
             bookMapper.insert(book);
 
-            Chapter chapter = new Chapter();
-            chapter.setBookId(book.getId());
-            chapter.setChapterNo(1);
-            chapter.setTitle("Chapter 1");
-            chapter.setContent(content);
-            chapterMapper.insert(chapter);
+            //parse chapters
+            List<Chapter> chapters = chapterService
+                        .parseChapters(content);
+
+            book.setTotalChapters(chapters.size());
+            bookMapper.updateTotalChapters(book.getId(),chapters.size());
+
+            for(Chapter chapter : chapters){
+                chapter.setBookId(book.getId());
+                chapterMapper.insert(chapter);
+            }
+
+
 
         } catch (IOException e) {
             throw new RuntimeException("Import Failed",e);

@@ -7,5 +7,7 @@ import java.util.List;
 public interface BookService {
     List<Book> findAll();
 
-    void importTxt(MultipartFile file);
+    void importTxt(MultipartFile file,String title);
+
+
 }
