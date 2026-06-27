@@ -1,7 +1,7 @@
 package com.wjl.englishreadingassistant.service;
 
 
-import com.alibaba.fastjson2.JSONObject;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wjl.englishreadingassistant.dto.SentenceAIResult;
 import com.wjl.englishreadingassistant.entity.AIChat;
@@ -10,7 +10,7 @@ import com.wjl.englishreadingassistant.mapper.AIChatMapper;
 import com.alibaba.dashscope.aigc.generation.Generation;
 import com.alibaba.dashscope.aigc.generation.GenerationParam;
 import com.alibaba.dashscope.aigc.generation.GenerationResult;
-import com.alibaba.dashscope.common.GeneralGetParam;
+
 import com.alibaba.dashscope.common.Message;
 import com.alibaba.dashscope.common.Role;
 import com.alibaba.dashscope.exception.ApiException;
@@ -20,8 +20,7 @@ import com.wjl.englishreadingassistant.mapper.SentenceMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+
 
 @Service
 public class AIService {
@@ -30,9 +29,12 @@ public class AIService {
 
     private final ObjectMapper objectMapper;
 
-    public AIService(AIChatMapper aiChatMapper, ObjectMapper objectMapper) {
+    private final SentenceMapper sentenceMapper;
+
+    public AIService(AIChatMapper aiChatMapper, ObjectMapper objectMapper, SentenceMapper sentenceMapper) {
         this.aiChatMapper = aiChatMapper;
         this.objectMapper = objectMapper;
+        this.sentenceMapper = sentenceMapper;
     }
 
     // read properties configuration directly, no need to create a new Config class
@@ -274,9 +276,28 @@ public class AIService {
                                            Long chapterId,
                                            String sentence) {
 
-        SentenceAnalysis sa = analyzeSentence(userId, bookId, chapterId, sentence);
+        System.out.println("========== 调用了 AI ==========");
+        SentenceAnalysis sa = analyzeSentence(sentence);
 
-        SentenceMapper.insert(sa, userId, bookId, chapterId);
+        try {
+
+            String grammarJson =
+                    objectMapper.writeValueAsString(sa.getGrammar());
+
+            String keyPhraseJson =
+                    objectMapper.writeValueAsString(sa.getKeyPhrases());
+
+            sentenceMapper.insert(
+                    sa,
+                    bookId,
+                    chapterId,
+                    grammarJson,
+                    keyPhraseJson
+            );
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         return sa;
     }

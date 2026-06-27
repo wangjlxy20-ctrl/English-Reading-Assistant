@@ -1,10 +1,10 @@
 #### 上传txt文件
-POST http://localhost:8080/books/upload
-Content-Type: multipart/form-data; boundary=WebAppBoundary
+POST http://localhost:8080/sentence/analyze
+Content-Type: application/json
 
---WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="animal_farm.txt"
-Content-Type: text/plain
-
-< ./animal_farm.txt
---WebAppBoundary--
+{
+  "userId": 1,
+  "bookId": 1,
+  "chapterId": 1,
+  "sentence": "I didn't realize how difficult it would be."
+}
