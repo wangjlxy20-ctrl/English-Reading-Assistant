@@ -56,20 +56,33 @@
         <button @click="selectedChapter = null">Return to Chapters</button>
         <h2>{{ selectedChapter.title }}</h2>
 
-        <div class="content">
+        <div class="content" @mouseup.stop="handleSelection">
           <div
             v-for="(sentence, index) in sentences"
             :key="index"
             class="sentence"
-            @click="analyzeSentence(sentence)"
+            :class="{
+              selected:
+              selectedSentence &&
+              sentence.trim()
+              .includes(selectedSentence.trim())
+            }"
           >
             <span
-              v-for="word in tokenize(sentence)"
-              :key="word"
-              class="word"
-              @click.stop="openWordMenu(word)"
+              v-for="(word,index) in tokenize(sentence)"
+              :key="index"
             >
-              {{ word }}
+              <span
+                class="word"
+                @click.stop="openWordMenu(word)"
+              >
+                {{ word }}
+              </span>
+
+              <span>
+                &nbsp;
+              </span>
+
             </span>
           </div>
         </div>
@@ -96,6 +109,16 @@
 
           <pre>{{ aiExplanation }}</pre>
         </div>
+
+        <div v-if="showSentencePanel" class="sentence-panel">
+          <button @click="closeSentencePanel">✖ Close</button>
+
+          <h3>Sentence Analysis</h3>
+
+          <pre>{{ sentenceAnalysis }}</pre>
+        </div>
+
+
       </div>
     </div>
 
@@ -173,6 +196,9 @@ const showMenu = ref(false);
 
 const showAiPanel = ref(false);
 
+
+
+
 //sentence
 
 const sentences = ref([]);
@@ -182,6 +208,10 @@ const showSentencePanel = ref(false);
 const sentenceAnalysis = ref(null);
 
 const currentSentence = ref("");
+
+let lastSelectedText = "";
+
+const selectedSentence = ref("");
 
 onMounted(async () => {
   await Promise.all([loadBooks(), loadRecords()]);
@@ -350,6 +380,8 @@ function openWordMenu(word) {
 }
 
 async function analyzeSentence(sentence) {
+
+  console.log("Enter The AI analysis:", sentence)
   currentSentence.value = sentence;
 
   try {
@@ -363,7 +395,10 @@ async function analyzeSentence(sentence) {
       sentence: sentence,
     });
 
+    console.log("return AI",res.data);
+
     sentenceAnalysis.value = res.data;
+    showSentencePanel.value = true;
 
     showSentencePanel.value = true;
   } catch (e) {
@@ -428,16 +463,75 @@ async function loadRecords() {
 
 //unified chunking function
 function tokenize(text) {
-  return text
-    .replace(/[\n\r]/g, " ")
-    .replace(/[^a-zA-Z0-9'’-]+/g, " ")
-    .trim()
-    .split(/\s+/);
+  return text.match(/[A-Za-z]+(?:'[A-Za-z]+)?|[.,!?;:()"'-]/g) || [];
 }
 
 function splitSentences(text) {
-  return text.replace(/[\n\r]/g, "").match(/[^.!?] + [.!?] + /g) || [];
+  return text
+    .replace(/\r\n/g, "\n")
+    .split(/\n\s*\n|(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
 }
+
+async function handleSelection() {
+
+  const selection = window.getSelection();
+
+  const text = window
+    .getSelection()
+    .toString()
+    .trim();
+
+  if (!text) {
+    return;
+  }
+
+  if(text === lastSelectedText) {
+    return;
+  }
+
+  selectedSentence.value = text;
+
+  lastSelectedText = text;
+
+  const words = text.trim().split(/\s+/);
+
+  console.log(
+    "word count : ",
+    words.length
+    );
+
+
+
+  if(words.length < 3){
+    
+    alert("The Sentence must contain more than three words");
+    return;
+  }
+
+  
+
+  console.log("Selected:", text);
+
+  await analyzeSentence(text);
+
+  window.getSelection().removeAllRanges();
+  
+  selection.removeAllRanges();
+}
+
+
+function closeSentencePanel(){
+
+showSentencePanel.value=false
+
+sentenceAnalysis.value=null
+
+selectedSentence.value=""
+
+}
+
 </script>
 
 <style scoped>
@@ -488,5 +582,17 @@ ul {
   margin-left: 4px;
 
   cursor: pointer;
+}
+
+.sentence.selected{
+
+background:#fff3a6;
+
+border-radius:6px;
+
+padding:4px;
+
+transition:0.3s;
+
 }
 </style>

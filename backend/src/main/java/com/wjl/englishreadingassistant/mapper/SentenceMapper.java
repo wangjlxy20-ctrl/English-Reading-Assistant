@@ -12,7 +12,8 @@ public interface SentenceMapper {
 
     @Insert("""
         INSERT INTO sentence_analysis
-        (book_id,
+        (
+         book_id,
          chapter_id,
          sentence,
          meaning,
@@ -20,7 +21,8 @@ public interface SentenceMapper {
          key_phrases,
          difficulty)
         VALUES
-        (#{bookId},
+        (
+         #{bookId},
          #{chapterId},
          #{sa.sentence},
          #{sa.meaning},

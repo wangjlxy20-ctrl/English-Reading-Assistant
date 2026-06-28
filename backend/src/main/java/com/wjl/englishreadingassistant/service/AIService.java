@@ -279,6 +279,12 @@ public class AIService {
         System.out.println("========== 调用了 AI ==========");
         SentenceAnalysis sa = analyzeSentence(sentence);
 
+
+        sa.setBookId(bookId);
+        sa.setChapterId(chapterId);
+        sa.setSentence(sentence);
+
+
         try {
 
             String grammarJson =

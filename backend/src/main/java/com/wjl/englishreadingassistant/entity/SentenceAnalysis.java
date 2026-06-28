@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class SentenceAnalysis {
-    private Long id;
+    private Long userId;
     private Long bookId;
     private Long chapterId;
 
