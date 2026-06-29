@@ -1,6 +1,6 @@
 # English Reading Assistant
 
-English Original Reading Assistant Based on ：Spring Boot + MyBatis + MySQL + Vue3 + Qwen-turbo
+English Original Reading Assistant Based on ：Spring Boot + MyBatis + MySQL + Vue3 + Qwen-turbo + RAG
 
 ## Tech Stack
 
@@ -31,7 +31,7 @@ AI:
 - Continue Reading
 - Vocabulary Cache
 - AI reading assistant
-
+- RAG
 ## Current API
 
 GET /books
@@ -54,6 +54,9 @@ Qwen-turbo API
 - Implement user login and registration functions
 
 ## Project Presentation
+![alt text](./docs/New_fronted_BookShelf.png)
+
+![alt text](./docs/New_frontend_ReadingPage.png)
 
 ![alt text](./docs/ReadingPageShow.png)
 
@@ -61,6 +64,7 @@ Qwen-turbo API
 
 ![alt text](./docs/AI_Chat_Show.png)
 
+![alt text](./docs/MySQL_Chunk_Show.png)
 ## Author
 
 WangJiaLe<br>

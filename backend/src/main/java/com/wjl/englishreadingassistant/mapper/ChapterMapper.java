@@ -3,6 +3,7 @@ package com.wjl.englishreadingassistant.mapper;
 import com.wjl.englishreadingassistant.entity.Chapter;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -10,8 +11,12 @@ import java.util.List;
 @Mapper
 public interface ChapterMapper {
 
-    @Select(
-            "select * from chapter where book_id = #{bookId}"
+    @Select("""
+    select * 
+    from chapter 
+    where book_id = #{bookId}
+    order by chapter_no
+    """
     )
     List<Chapter> findByBookId(Long bookId);
 
@@ -34,5 +39,6 @@ public interface ChapterMapper {
          
          )
     """)
+    @Options(useGeneratedKeys = true,keyProperty = "id")
     void insert(Chapter chapter);
 }
