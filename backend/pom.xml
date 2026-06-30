@@ -31,12 +31,12 @@
         </dependency>
 
 
-        <!-- MySQL -->
+        <!-- MySQL
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
-
+        -->
 
         <!-- MyBatis -->
         <dependency>
@@ -53,7 +53,7 @@
         </dependency>
 
 
-        <!-- QianWen SDK -->
+        <!-- Qwen SDK -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>dashscope-sdk-java</artifactId>
@@ -98,6 +98,19 @@
             <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
 
+        <!-- PGVector -->
+        <dependency>
+            <groupId>com.pgvector</groupId>
+            <artifactId>pgvector</artifactId>
+            <version>0.1.6</version>
+        </dependency>
+
+        <!-- OpenAI SDK -->
+        <dependency>
+            <groupId>com.openai</groupId>
+            <artifactId>openai-java</artifactId>
+            <version>2.9.0</version>
+        </dependency>
 
     </dependencies>
 
