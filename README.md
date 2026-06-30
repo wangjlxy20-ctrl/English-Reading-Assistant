@@ -1,6 +1,6 @@
 # English Reading Assistant
 
-English Original Reading Assistant Based on ：Spring Boot + MyBatis + MySQL + Vue3 + Qwen-turbo + RAG
+English Original Reading Assistant Based on ：Spring Boot + MyBatis + MySQL + Vue3 + Qwen-turbo + PostgreSQL + RAG
 
 ## Tech Stack
 
@@ -20,6 +20,11 @@ AI:
 
 - Qwen-turbo
 
+DATABASE:
+
+- PostgreSQL
+- MySQL
+
 ## Features
 
 - Book management
@@ -31,7 +36,9 @@ AI:
 - Continue Reading
 - Vocabulary Cache
 - AI reading assistant
-- RAG
+- Retrieval-Augmented Generation
+- Apply database schema migration via Flyway SQL scripts
+
 ## Current API
 
 GET /books
@@ -53,7 +60,8 @@ Qwen-turbo API
 - Import PDF/EPUB Files
 - Implement user login and registration functions
 
-## Project Presentation
+## Project Presentation :
+
 ![alt text](./docs/New_fronted_BookShelf.png)
 
 ![alt text](./docs/New_frontend_ReadingPage.png)
@@ -65,6 +73,9 @@ Qwen-turbo API
 ![alt text](./docs/AI_Chat_Show.png)
 
 ![alt text](./docs/MySQL_Chunk_Show.png)
+
+![alt text](./docs/PostgreSQL_Show.png)
+
 ## Author
 
 WangJiaLe<br>

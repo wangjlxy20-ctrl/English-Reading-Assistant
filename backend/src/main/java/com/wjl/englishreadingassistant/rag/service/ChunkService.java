@@ -1,4 +1,4 @@
-package com.wjl.englishreadingassistant.service;
+package com.wjl.englishreadingassistant.rag.service;
 
 import com.wjl.englishreadingassistant.entity.Chapter;
 

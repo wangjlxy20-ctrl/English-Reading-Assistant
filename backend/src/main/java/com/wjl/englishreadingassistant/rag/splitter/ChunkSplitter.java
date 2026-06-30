@@ -1,6 +1,6 @@
-package com.wjl.englishreadingassistant.rag;
+package com.wjl.englishreadingassistant.rag.splitter;
 
-import com.wjl.englishreadingassistant.dto.ChunkResult;
+import com.wjl.englishreadingassistant.rag.dto.ChunkResult;
 
 import java.util.List;
 

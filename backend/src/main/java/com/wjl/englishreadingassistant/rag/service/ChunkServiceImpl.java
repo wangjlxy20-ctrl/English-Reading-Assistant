@@ -1,12 +1,12 @@
-package com.wjl.englishreadingassistant.service.impl;
+package com.wjl.englishreadingassistant.rag.service;
 
 
-import com.wjl.englishreadingassistant.dto.ChunkResult;
+import com.wjl.englishreadingassistant.rag.dto.ChunkResult;
 import com.wjl.englishreadingassistant.entity.Chapter;
 import com.wjl.englishreadingassistant.entity.Chunk;
+import com.wjl.englishreadingassistant.enums.EmbeddingStatusEnum;
 import com.wjl.englishreadingassistant.mapper.ChunkMapper;
-import com.wjl.englishreadingassistant.rag.ChunkSplitter;
-import com.wjl.englishreadingassistant.service.ChunkService;
+import com.wjl.englishreadingassistant.rag.splitter.ChunkSplitter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +44,7 @@ public class ChunkServiceImpl implements ChunkService {
             chunk.setTokenCount(result.getTokenCount());
 
             //Status code 0 : Waiting for embedding vector generation
-            chunk.setEmbeddingStatus(0);
+            chunk.setEmbeddingStatus(EmbeddingStatusEnum.PENDING.getCode());
             chunkMapper.insert(chunk);
         }
 

@@ -26,8 +26,8 @@ public interface SentenceMapper {
          #{chapterId},
          #{sa.sentence},
          #{sa.meaning},
-         #{grammar},
-         #{keyPhrases},
+         #{grammar} :: jsonb,
+         #{keyPhrases} :: jsonb,
          #{sa.difficulty})
         """)void insert(
             @Param("sa")SentenceAnalysis sa,

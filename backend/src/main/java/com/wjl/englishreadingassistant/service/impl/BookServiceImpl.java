@@ -6,7 +6,7 @@ import com.wjl.englishreadingassistant.mapper.BookMapper;
 import com.wjl.englishreadingassistant.mapper.ChapterMapper;
 import com.wjl.englishreadingassistant.service.BookService;
 import com.wjl.englishreadingassistant.service.ChapterService;
-import com.wjl.englishreadingassistant.service.ChunkService;
+import com.wjl.englishreadingassistant.rag.service.ChunkService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;

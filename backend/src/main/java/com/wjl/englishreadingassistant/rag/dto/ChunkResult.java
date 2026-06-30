@@ -1,4 +1,4 @@
-package com.wjl.englishreadingassistant.dto;
+package com.wjl.englishreadingassistant.rag.dto;
 
 
 import lombok.AllArgsConstructor;
