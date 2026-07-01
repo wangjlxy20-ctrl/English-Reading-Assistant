@@ -5,7 +5,7 @@ import com.wjl.englishreadingassistant.rag.dto.ChunkResult;
 import com.wjl.englishreadingassistant.entity.Chapter;
 import com.wjl.englishreadingassistant.entity.Chunk;
 import com.wjl.englishreadingassistant.enums.EmbeddingStatusEnum;
-import com.wjl.englishreadingassistant.mapper.ChunkMapper;
+import com.wjl.englishreadingassistant.rag.mapper.ChunkMapper;
 import com.wjl.englishreadingassistant.rag.splitter.ChunkSplitter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,11 +16,12 @@ import java.util.List;
 public class ChunkServiceImpl implements ChunkService {
     private final ChunkSplitter chunkSplitter;
     private final ChunkMapper chunkMapper;
-
+    private final EmbeddingService embeddingService;
     public ChunkServiceImpl(ChunkSplitter chunkSplitter,
-                            ChunkMapper chunkMapper) {
+                            ChunkMapper chunkMapper, EmbeddingService embeddingService) {
         this.chunkSplitter = chunkSplitter;
         this.chunkMapper = chunkMapper;
+        this.embeddingService = embeddingService;
     }
 
     @Override
@@ -46,6 +47,27 @@ public class ChunkServiceImpl implements ChunkService {
             //Status code 0 : Waiting for embedding vector generation
             chunk.setEmbeddingStatus(EmbeddingStatusEnum.PENDING.getCode());
             chunkMapper.insert(chunk);
+            System.out.println(chunk.getId());
+
+
+            try {
+                embeddingService.saveEmbedding(chunk.getId(),
+                        chunk.getContent());
+
+                chunkMapper.updateEmbeddingStatus(
+                        chunk.getId(),
+                        EmbeddingStatusEnum.SUCCESS.getCode()
+                );
+            } catch (Exception e) {
+                chunkMapper.updateEmbeddingStatus(
+                        chunk.getId(),
+                        EmbeddingStatusEnum.FAILED.getCode()
+                );
+
+                e.printStackTrace();
+            }
+
+
         }
 
     }

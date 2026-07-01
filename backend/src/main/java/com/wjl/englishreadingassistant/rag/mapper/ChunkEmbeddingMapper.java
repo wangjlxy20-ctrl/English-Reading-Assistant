@@ -1,26 +1,26 @@
 package com.wjl.englishreadingassistant.rag.mapper;
 
-import com.wjl.englishreadingassistant.rag.entity.SentenceEmbedding;
+import com.wjl.englishreadingassistant.rag.entity.ChunkEmbedding;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface SentenceEmbeddingMapper {
+public interface ChunkEmbeddingMapper {
 
     @Insert("""
-    insert into sentence_embedding
+    insert into chunk_embedding
         (
-         sentence_id,
+         chunk_id,
          content,
          embedding
         )
     values (
-            #{sentenceId},
+            #{chunkId},
             #{content},
             CAST(#{embedding} AS vector)
     )
     """)
-    void insert(SentenceEmbedding embedding);
+    void insert(ChunkEmbedding embedding);
 
 
 }

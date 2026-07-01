@@ -1,25 +1,27 @@
 package com.wjl.englishreadingassistant.rag.service.impl;
 
 import com.wjl.englishreadingassistant.rag.embedding.EmbeddingClient;
-import com.wjl.englishreadingassistant.rag.entity.SentenceEmbedding;
-import com.wjl.englishreadingassistant.rag.mapper.SentenceEmbeddingMapper;
+import com.wjl.englishreadingassistant.rag.entity.ChunkEmbedding;
+import com.wjl.englishreadingassistant.rag.mapper.ChunkEmbeddingMapper;
 import com.wjl.englishreadingassistant.rag.service.EmbeddingService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class EmbeddingServiceImpl implements EmbeddingService {
 
     private final EmbeddingClient embeddingClient;
 
-    private final SentenceEmbeddingMapper sentenceEmbeddingMapper;
+    private final ChunkEmbeddingMapper chunkEmbeddingMapper;
 
-    public EmbeddingServiceImpl(EmbeddingClient embeddingClient, SentenceEmbeddingMapper sentenceEmbeddingMapper) {
+    public EmbeddingServiceImpl(EmbeddingClient embeddingClient, ChunkEmbeddingMapper chunkEmbeddingMapper) {
         this.embeddingClient = embeddingClient;
-        this.sentenceEmbeddingMapper = sentenceEmbeddingMapper;
+        this.chunkEmbeddingMapper = chunkEmbeddingMapper;
     }
 
     @Override
-    public void saveEmbedding(Long sentenceId, String content) {
+    public void saveEmbedding(Long chunkId, String content) {
 
         //Invoke DashScope
         List<Float> vector = embeddingClient.embed(content);
@@ -28,12 +30,12 @@ public class EmbeddingServiceImpl implements EmbeddingService {
         String embedding = vector.toString();
 
         //build entity object
-        SentenceEmbedding entity = new SentenceEmbedding();
-        entity.setSentenceId(sentenceId);
+        ChunkEmbedding entity = new ChunkEmbedding();
+        entity.setChunkId(chunkId);
         entity.setContent(content);
         entity.setEmbedding(embedding);
 
         //save
-        sentenceEmbeddingMapper.insert(entity);
+        chunkEmbeddingMapper.insert(entity);
     }
 }

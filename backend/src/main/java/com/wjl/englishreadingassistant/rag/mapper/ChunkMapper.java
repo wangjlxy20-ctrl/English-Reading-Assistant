@@ -1,11 +1,8 @@
-package com.wjl.englishreadingassistant.mapper;
+package com.wjl.englishreadingassistant.rag.mapper;
 
 
 import com.wjl.englishreadingassistant.entity.Chunk;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -29,6 +26,7 @@ public interface ChunkMapper {
             #{embeddingStatus}
     )
     """)
+    @Options(useGeneratedKeys = true,keyProperty = "id")
     void insert(Chunk chunk);
 
 
@@ -47,4 +45,16 @@ public interface ChunkMapper {
     where chapter_id = #{chapterId}
     """)
     void deleteByChapterId(Long chapterId);
+
+    @Update("""
+    update chunk
+    set embedding_status = #{status}
+    where id = #{id}
+    """)
+    void updateEmbeddingStatus(
+            @Param("id") Long id,
+            @Param("status") Integer status
+    );
+
+
 }

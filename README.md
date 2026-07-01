@@ -66,6 +66,10 @@ Qwen-turbo API
 
 ![alt text](./docs/New_frontend_ReadingPage.png)
 
+![alt text](./docs/PostgreSQL_Embedding_Vector_Show.png)
+
+![alt text](./docs/PG_Chunk_table_show.png)
+
 ![alt text](./docs/ReadingPageShow.png)
 
 ![alt text](./docs/Load_Catche.png)
