@@ -38,4 +38,20 @@ public class EmbeddingServiceImpl implements EmbeddingService {
         //save
         chunkEmbeddingMapper.insert(entity);
     }
+
+    @Override
+    public List<ChunkEmbedding> searchSimilar(String question,Integer topK) {
+
+        //Generate embedding vector based on user input question
+        List<Float> vector =
+                embeddingClient.embed(question);
+
+        //Transform vector data into the format supported by pg_vector extension
+        String embedding =
+                vector.toString();
+
+        //Retrieve similar chunks from database via matching
+        return chunkEmbeddingMapper.searchSimilar(embedding,
+                topK);
+    }
 }

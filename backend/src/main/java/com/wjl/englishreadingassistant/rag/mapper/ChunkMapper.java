@@ -56,5 +56,10 @@ public interface ChunkMapper {
             @Param("status") Integer status
     );
 
-
+    @Select("""
+    select *
+    from chunk
+    where id = #{id}
+    """)
+    Chunk findById(Long id);
 }

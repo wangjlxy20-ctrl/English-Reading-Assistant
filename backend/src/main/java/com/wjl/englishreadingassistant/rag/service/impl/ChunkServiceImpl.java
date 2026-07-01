@@ -1,4 +1,4 @@
-package com.wjl.englishreadingassistant.rag.service;
+package com.wjl.englishreadingassistant.rag.service.impl;
 
 
 import com.wjl.englishreadingassistant.rag.dto.ChunkResult;
@@ -6,6 +6,8 @@ import com.wjl.englishreadingassistant.entity.Chapter;
 import com.wjl.englishreadingassistant.entity.Chunk;
 import com.wjl.englishreadingassistant.enums.EmbeddingStatusEnum;
 import com.wjl.englishreadingassistant.rag.mapper.ChunkMapper;
+import com.wjl.englishreadingassistant.rag.service.ChunkService;
+import com.wjl.englishreadingassistant.rag.service.EmbeddingService;
 import com.wjl.englishreadingassistant.rag.splitter.ChunkSplitter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

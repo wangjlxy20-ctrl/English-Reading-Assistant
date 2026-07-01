@@ -156,6 +156,41 @@
               <p>Click a word to look it up,<br>or drag to select a sentence for analysis.</p>
             </div>
 
+            <!-- RAG Q&A -->
+            <div class="ai-card rag-card">
+              <div class="ai-card-title">
+                <span>🔎 Ask about this book</span>
+                <button v-if="ragAnswer" class="icon-btn" @click="clearRagAnswer">✕</button>
+              </div>
+              <div class="ai-card-body rag-body">
+                <div class="rag-input-row">
+                  <input
+                    v-model="ragQuestion"
+                    class="rag-input"
+                    type="text"
+                    placeholder="e.g. What happened in Chapter 4?"
+                    @keyup.enter="askRag"
+                  />
+                  <button class="btn-primary small" :disabled="ragLoading || !ragQuestion.trim()"
+                    @click="askRag">Ask</button>
+                </div>
+
+                <div v-if="ragLoading" class="loading-dots"><span></span><span></span><span></span></div>
+
+                <div v-else-if="ragAnswer" class="rag-answer rag-scroll">
+                  <div class="rag-answer-text">{{ ragAnswer }}</div>
+
+                  <div v-if="ragSources.length" class="rag-sources">
+                    <div class="sa-label">📚 Sources</div>
+                    <div v-for="(src, i) in ragSources" :key="src.id" class="rag-source-item">
+                      <span class="rag-source-tag">Ch.{{ src.chapterId }} · #{{ src.chunkIndex }}</span>
+                      <span class="rag-source-snippet">{{ src.content.slice(0, 80) }}...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -214,6 +249,10 @@ const sentenceAnalysis = ref(null);
 const currentSentence = ref("");
 let lastSelectedText = "";
 const selectedSentence = ref("");
+const ragQuestion = ref("");
+const ragAnswer = ref("");
+const ragSources = ref([]);
+const ragLoading = ref(false);
 
 onMounted(async () => {
   await Promise.all([loadBooks(), loadRecords()]);
@@ -395,6 +434,33 @@ function closeSentencePanel() {
   sentenceAnalysis.value = null;
   selectedSentence.value = "";
   lastSelectedText = "";
+}
+
+// ─── RAG Q&A ──────────────────────────────────────────────────────────────────
+function clearRagAnswer() {
+  ragAnswer.value = "";
+  ragSources.value = [];
+  ragQuestion.value = "";
+}
+
+async function askRag() {
+  const question = ragQuestion.value.trim();
+  if (!question) return;
+
+  ragLoading.value = true;
+  ragAnswer.value = "";
+  ragSources.value = [];
+
+  try {
+    const res = await request.get("/rag/ask", { params: { question } });
+    ragAnswer.value = res.data.answer;
+    ragSources.value = res.data.sources || [];
+  } catch (e) {
+    console.error(e);
+    ragAnswer.value = "Failed to get an answer, please try again.";
+  } finally {
+    ragLoading.value = false;
+  }
 }
 
 // ─── Vocabulary ───────────────────────────────────────────────────────────────
@@ -908,6 +974,76 @@ function getLastReadChapter(bookId) {
   font-size: 0.8rem;
   color: #888;
   margin-left: 4px;
+}
+
+/* ── RAG Q&A ─────────────────────────────────────────────────────────────── */
+.rag-card {
+  flex-shrink: 0;
+}
+
+.rag-body {
+  max-height: none;
+  overflow: visible;
+}
+
+.rag-scroll {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.rag-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.rag-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #e0ddd6;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.rag-input:focus {
+  border-color: #1a4fa0;
+}
+
+.rag-answer {
+  margin-top: 14px;
+}
+
+.rag-answer-text {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #2c2c2c;
+  white-space: pre-wrap;
+}
+
+.rag-sources {
+  margin-top: 14px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.rag-source-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+}
+
+.rag-source-tag {
+  font-weight: bold;
+  color: #1a4fa0;
+}
+
+.rag-source-snippet {
+  color: #777;
+  overflow-wrap: break-word;
 }
 
 /* ── Empty state ─────────────────────────────────────────────────────────── */

@@ -8,7 +8,6 @@ Backend:
 
 - Spring Boot
 - MyBatis
-- MySQL
 - Maven
 
 Frontend:
@@ -36,7 +35,7 @@ DATABASE:
 - Continue Reading
 - Vocabulary Cache
 - AI reading assistant
-- Retrieval-Augmented Generation
+- Retrieval-Augmented Generation ehances AI searching ability
 - Apply database schema migration via Flyway SQL scripts
 
 ## Current API
@@ -53,6 +52,8 @@ FreeDictionaryAPI
 
 Qwen-turbo API
 
+Qwen-text-embedding-v4
+
 ## Future
 
 - Optimize the splitting algorithm for English text
@@ -61,6 +62,8 @@ Qwen-turbo API
 - Implement user login and registration functions
 
 ## Project Presentation :
+
+![alt text](image.png)
 
 ![alt text](./docs/New_fronted_BookShelf.png)
 
