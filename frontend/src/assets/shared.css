@@ -1,0 +1,212 @@
+/* ── Reset & Base ─────────────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  min-height: 100vh;
+  background: #f8f7f4;
+  font-family: 'Georgia', serif;
+  color: #2c2c2c;
+}
+
+/* ── Topbar ───────────────────────────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 32px;
+  background: #1a1a2e;
+  color: #e8e4d9;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  font-size: 1.15rem;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #e8e4d9;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.upload-label {
+  cursor: pointer;
+}
+
+/* ── Main Content ─────────────────────────────────────────────────────────── */
+.main-content {
+  padding: 24px 32px;
+}
+
+.panel-center {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.btn-back {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px 0;
+  margin-bottom: 8px;
+}
+
+.btn-back:hover {
+  color: #1a1a2e;
+}
+
+.btn-primary {
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.85;
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary.small {
+  padding: 5px 10px;
+  font-size: 0.78rem;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #888;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.icon-btn:hover {
+  color: #333;
+  background: #eee;
+}
+
+.icon-btn.danger:hover {
+  color: #c0392b;
+  background: #ffeaea;
+}
+
+/* ── AI Card (base look shared by every sidebar card) ────────────────────── */
+.ai-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  /* FIX #2: content never overflows card */
+  min-width: 0;
+}
+
+.ai-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #1a1a2e;
+  color: #e8e4d9;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.ai-card-body {
+  padding: 16px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  /* FIX #2: wrap long text, no overflow */
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+/* ── Loading ─────────────────────────────────────────────────────────────── */
+.loading-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  padding: 20px;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1a1a2e;
+  animation: bounce 0.9s infinite ease-in-out;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ── Transition ──────────────────────────────────────────────────────────── */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+}

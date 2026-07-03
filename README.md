@@ -63,7 +63,7 @@ Qwen-text-embedding-v4
 
 ## Project Presentation :
 
-![alt text](image.png)
+![alt text](./docs/RAG_Ability_Show.png)
 
 ![alt text](./docs/New_fronted_BookShelf.png)
 
