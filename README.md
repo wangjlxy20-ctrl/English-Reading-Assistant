@@ -71,6 +71,8 @@ Qwen-text-embedding-v4
 
 ![alt text](./docs/PostgreSQL_Embedding_Vector_Show.png)
 
+![alt text](./docs/Embeddinig_OverLap_Show.png)
+
 ![alt text](./docs/PG_Chunk_table_show.png)
 
 ![alt text](./docs/ReadingPageShow.png)
