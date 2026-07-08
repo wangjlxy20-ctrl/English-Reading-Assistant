@@ -2,10 +2,15 @@ package com.wjl.englishreadingassistant.service.impl;
 
 import com.wjl.englishreadingassistant.entity.Chapter;
 import com.wjl.englishreadingassistant.mapper.ChapterMapper;
+import com.wjl.englishreadingassistant.redis.service.RedisService;
+import com.wjl.englishreadingassistant.redis.util.RedisKey;
 import com.wjl.englishreadingassistant.service.ChapterService;
 import org.springframework.stereotype.Service;
+import com.wjl.englishreadingassistant.redis.util.RedisKey;
 
+import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +18,8 @@ import java.util.regex.Pattern;
 public class ChapterServiceImpl implements ChapterService {
 
     private final ChapterMapper chapterMapper;
+
+    private final RedisService redisService;
 
     // ── 核心正则 ──────────────────────────────────────────────────────────────
     // 匹配章节标记行，格式举例：
@@ -29,8 +36,9 @@ public class ChapterServiceImpl implements ChapterService {
     // 一行中英文单词数超过此值 → 认为是正文句子，不是章节标题行
     private static final int MAX_TITLE_WORD_COUNT = 8;
 
-    public ChapterServiceImpl(ChapterMapper chapterMapper) {
+    public ChapterServiceImpl(ChapterMapper chapterMapper, RedisService redisService) {
         this.chapterMapper = chapterMapper;
+        this.redisService = redisService;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -41,7 +49,28 @@ public class ChapterServiceImpl implements ChapterService {
 
     @Override
     public Chapter findById(Long id) {
-        return chapterMapper.findById(id);
+
+        String key = RedisKey.chapter(id);
+        Chapter cache =
+                redisService.get(key,Chapter.class);
+
+        if(cache != null){
+            System.out.println("[Redis] Cache hit : " + key);
+            return cache;
+        }
+        System.out.println("[Redis] Cache miss : " + key);
+
+        Chapter chapter = chapterMapper.findById(id);
+
+        if(chapter != null) {
+            redisService.set(
+                    key,
+                    chapter,
+                    Duration.ofMinutes(RedisKey.CHAPTER_CACHE_MINUTES)
+            );
+        }
+
+        return chapter;
     }
 
     @Override

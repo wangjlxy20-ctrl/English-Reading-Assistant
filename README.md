@@ -75,6 +75,12 @@ Qwen-text-embedding-v4
 
 ![alt text](./docs/PG_Chunk_table_show.png)
 
+![alt text](./docs/Redis_Spring_terminal_show.png)
+
+![alt text](./docs/redis_docker_show.png)
+
+![alt text](./docs/Chapter_redis_cache_show.png)
+
 ![alt text](./docs/ReadingPageShow.png)
 
 ![alt text](./docs/Load_Catche.png)

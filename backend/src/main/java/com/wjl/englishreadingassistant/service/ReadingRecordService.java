@@ -9,4 +9,6 @@ public interface ReadingRecordService {
     List<ReadingRecord> findByUserId(Long userId);
 
     void save(ReadingRecord record);
+
+    ReadingRecord findByUserAndBook(Long uerId,Long bookId);
 }
