@@ -80,6 +80,8 @@ Qwen-text-embedding-v4
 
 ![alt text](./docs/RAG_Redis_Cache_Show.png)
 
+![alt text](./docs/Redis_Cache_Hit_Show.png)
+
 ![alt text](./docs/redis_docker_show.png)
 
 ![alt text](./docs/Chapter_redis_cache_show.png)
