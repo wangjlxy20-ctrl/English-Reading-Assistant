@@ -18,6 +18,7 @@ public class RedisServiceImpl implements RedisService {
     private final RedisTemplate<String,Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
+
     public RedisServiceImpl(RedisTemplate<String, Object> redisTemplate, ObjectMapper objectMapper) {
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
@@ -42,7 +43,7 @@ public class RedisServiceImpl implements RedisService {
         if(value == null){
             return null;
         }
-        return (T) value;
+        return objectMapper.convertValue(value,clazz);
     }
 
     @Override

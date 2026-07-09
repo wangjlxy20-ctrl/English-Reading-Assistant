@@ -13,7 +13,7 @@ public class RedisKey {
     }
 
     public static String rag(String question) {
-        return "rag" + question.hashCode();
+        return "RAG : " + question.hashCode();
     }
 
 

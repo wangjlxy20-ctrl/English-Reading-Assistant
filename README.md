@@ -1,6 +1,6 @@
 # English Reading Assistant
 
-English Original Reading Assistant Based on ：Spring Boot + MyBatis + MySQL + Vue3 + Qwen-turbo + PostgreSQL + RAG
+English Original Reading Assistant Based on ：Spring Boot + MyBatis + MySQL + Vue3 + Qwen-turbo + PostgreSQL + RAG + Redis
 
 ## Tech Stack
 
@@ -23,6 +23,7 @@ DATABASE:
 
 - PostgreSQL
 - MySQL
+- Redis
 
 ## Features
 
@@ -76,6 +77,8 @@ Qwen-text-embedding-v4
 ![alt text](./docs/PG_Chunk_table_show.png)
 
 ![alt text](./docs/Redis_Spring_terminal_show.png)
+
+![alt text](./docs/RAG_Redis_Cache_Show.png)
 
 ![alt text](./docs/redis_docker_show.png)
 

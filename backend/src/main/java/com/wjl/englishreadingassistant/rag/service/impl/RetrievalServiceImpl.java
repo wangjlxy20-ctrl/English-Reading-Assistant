@@ -1,5 +1,6 @@
 package com.wjl.englishreadingassistant.rag.service.impl;
 
+import com.alibaba.fastjson2.TypeReference;
 import com.wjl.englishreadingassistant.entity.Chunk;
 import com.wjl.englishreadingassistant.rag.entity.ChunkEmbedding;
 import com.wjl.englishreadingassistant.rag.mapper.ChunkMapper;
@@ -9,6 +10,7 @@ import com.wjl.englishreadingassistant.redis.service.RedisService;
 import com.wjl.englishreadingassistant.redis.util.RedisKey;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,13 +39,15 @@ public class RetrievalServiceImpl implements RetrievalService {
         List<Chunk> cache =
                 redisService.get(
                         key,
-                        List.class
+                        new TypeReference<List<Chunk>>(){}
                 );
 
         if (cache != null) {
             System.out.println("[Redis] RAG Cache hit : " + key);
             return cache;
         }
+
+        System.out.println("=====RAG Cache Miss=====");
 
         // 1. 相似向量检索
         List<ChunkEmbedding> embeddings =
@@ -65,6 +69,10 @@ public class RetrievalServiceImpl implements RetrievalService {
                 result.add(chunk);
             }
         }
+
+        //Write data to cache
+        redisService.set(key,result, Duration.ofMinutes(30));
+
 
         return result;
     }
