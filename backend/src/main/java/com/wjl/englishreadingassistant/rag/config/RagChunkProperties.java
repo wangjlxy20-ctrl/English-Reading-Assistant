@@ -16,5 +16,5 @@ public class RagChunkProperties {
 
     //Number of overlapping words between two consecutive chunks
     @Min(0)
-    private Integer overlap = 0;
+    private Integer overlap = 40;
 }

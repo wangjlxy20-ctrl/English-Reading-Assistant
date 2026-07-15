@@ -59,7 +59,7 @@ public class SentenceChunkSplitter implements ChunkSplitter {
 
                     // Build the overlap tail: walk backwards from the end
                     // of the chunk we just closed, keeping whole sentences
-                    // until we've collected ~`overlap` words. This becomes
+                    // until we've collected `overlap` words. This becomes
                     // the opening of the next chunk, so consecutive chunks
                     // share context instead of hard-cutting mid-topic.
                     List<String> overlapSentences = new ArrayList<>();
